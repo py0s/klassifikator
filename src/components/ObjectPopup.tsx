@@ -9,6 +9,7 @@
 import { useEffect } from 'react'
 import type { ClassifierObject, InfraBlock } from '../types'
 import { findCore, findOrbit } from '../constants'
+import LucideIcon from './LucideIcon'
 
 interface Props {
   obj: ClassifierObject
@@ -63,8 +64,9 @@ export default function ObjectPopup({ obj, infraBlocks, onClose, onInfraClick }:
             </div>
             <div className="ps">
               <div className="ps-lbl">Ядро</div>
-              <div className="ps-val" style={{ color: core?.color }}>
-                {core?.icon} {core?.name}
+              <div className="ps-val" style={{ color: core?.color, display: 'flex', alignItems: 'center', gap: '.3rem' }}>
+                {core && <LucideIcon name={core.icon} size={13} color={core.color} />}
+                {core?.name}
               </div>
             </div>
             <div className="ps">
