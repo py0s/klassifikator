@@ -88,16 +88,26 @@ export default function MatrixView({ objects, infraBlocks, onSelect }: Props) {
                     onClick={() => hasExpandable && toggleCore(cr.id)}
                     title={isExpanded ? 'Свернуть' : 'Развернуть инфра-слои и спутники'}
                   >
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '.35rem', flexWrap: 'nowrap' }}>
-                      <LucideIcon name={cr.icon} size={14} color={cr.color} />
-                      <span style={{ flex: 1 }}>{cr.name}</span>
+                    <span style={{ display: 'flex', flexDirection: 'column', gap: '.2rem' }}>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '.35rem' }}>
+                        <LucideIcon name={cr.icon} size={14} color={cr.color} />
+                        <span style={{ flex: 1 }}>{cr.name}</span>
+                        {hasExpandable && (
+                          <span className="mx-toggle" style={{ transform: isExpanded ? 'rotate(90deg)' : 'none', color: cr.color }}>▶</span>
+                        )}
+                      </span>
                       {hasExpandable && (
-                        <span style={{ fontSize: '.42rem', color: 'var(--text3)', opacity: 0.55, textTransform: 'uppercase', letterSpacing: '.04em', whiteSpace: 'nowrap' }}>
-                          инфра-слои
+                        <span style={{
+                          fontSize: '.42rem',
+                          color: 'var(--text3)',
+                          opacity: 0.55,
+                          textTransform: 'uppercase',
+                          letterSpacing: '.04em',
+                          whiteSpace: 'normal',
+                          lineHeight: 1.3,
+                        }}>
+                          спутники и инфраструктурные слои
                         </span>
-                      )}
-                      {hasExpandable && (
-                        <span className="mx-toggle" style={{ transform: isExpanded ? 'rotate(90deg)' : 'none', color: cr.color }}>▶</span>
                       )}
                     </span>
                   </td>
