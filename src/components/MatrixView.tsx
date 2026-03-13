@@ -82,6 +82,18 @@ export default function MatrixView({ objects, infraBlocks, onSelect }: Props) {
                   <span style={{ display: 'flex', alignItems: 'center', gap: '.35rem', flexWrap: 'nowrap' }}>
                       <LucideIcon name={cr.icon} size={14} color={cr.color} />
                       <span style={{ flex: 1 }}>{cr.name}</span>
+                      {infraForCore.length > 0 && (
+                        <span style={{
+                          fontSize: '.42rem',
+                          color: 'var(--text3)',
+                          opacity: 0.55,
+                          textTransform: 'uppercase',
+                          letterSpacing: '.04em',
+                          whiteSpace: 'nowrap',
+                        }}>
+                          инфра-слои
+                        </span>
+                      )}
                       <span
                         className="mx-toggle"
                         style={{
