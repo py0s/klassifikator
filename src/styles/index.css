@@ -102,16 +102,16 @@ body {
 /* ─── Matrix ─── */
 .matrix-wrap { max-width: 1500px; margin: 0 auto; padding: 1.5rem; overflow-x: auto; }
 .matrix { width: 100%; border-collapse: separate; border-spacing: 2px; }
-.matrix th { background: var(--bg3); padding: .4rem .45rem; font-size: .58rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); border-radius: 4px; position: sticky; top: 0; z-index: 2; }
-.matrix td { padding: .25rem .35rem; border-radius: 4px; vertical-align: top; background: var(--card); border: 1px solid var(--border); }
-.matrix td.core-label { background: var(--bg3); font-weight: 700; font-size: .62rem; color: var(--text2); white-space: nowrap; min-width: 90px; position: sticky; left: 0; z-index: 1; }
-.mx-item { font-size: .56rem; color: var(--text2); padding: .12rem .2rem; border-radius: 3px; margin-bottom: 2px; cursor: pointer; transition: background .12s; display: flex; gap: .25rem; align-items: baseline; }
+.matrix th { background: var(--bg3); padding: .5rem .6rem; font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); border-radius: 4px; position: sticky; top: 0; z-index: 2; }
+.matrix td { padding: .35rem .5rem; border-radius: 4px; vertical-align: top; background: var(--card); border: 1px solid var(--border); }
+.matrix td.core-label { background: var(--bg3); font-weight: 700; font-size: .75rem; color: var(--text2); white-space: nowrap; min-width: 108px; position: sticky; left: 0; z-index: 1; }
+.mx-item { font-size: .66rem; color: var(--text2); padding: .15rem .25rem; border-radius: 3px; margin-bottom: 3px; cursor: pointer; transition: background .12s; display: flex; gap: .3rem; align-items: baseline; line-height: 1.35; }
 .mx-item:hover { background: rgba(255,255,255,0.05); }
 .mx-item.mx-key { background: rgba(201,149,107,0.06); }
 .mx-item.mx-item--lit { background: rgba(201,149,107,0.15); outline: 1px solid rgba(201,149,107,0.3); border-radius: 3px; }
-.mx-code { font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: .48rem; flex-shrink: 0; }
-.mx-name { flex: 1; }
-.mx-count { display: inline-block; background: var(--bg); border-radius: 3px; padding: 0 .3rem; font-size: .48rem; font-weight: 700; color: var(--text3); margin-top: .12rem; }
+.mx-code { font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: .55rem; flex-shrink: 0; }
+.mx-name { flex: 1; line-height: 1.35; }
+.mx-count { display: inline-block; background: var(--bg); border-radius: 3px; padding: 0 .35rem; font-size: .55rem; font-weight: 700; color: var(--text3); margin-top: .15rem; }
 
 /* ── Toggle button in core label ── */
 .mx-toggle {

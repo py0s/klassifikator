@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { ClassifierObject, InfraBlock } from '../types'
 import { ORBITS, CORES, getCoreId, getOrbitId } from '../constants'
+import LucideIcon from './LucideIcon'
 
 interface Props {
   objects: ClassifierObject[]
@@ -78,8 +79,8 @@ export default function MatrixView({ objects, infraBlocks, onSelect }: Props) {
                     onClick={() => toggleCore(cr.id)}
                     title={isExpanded ? 'Свернуть инфраструктуру' : 'Развернуть инфраструктуру'}
                   >
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '.35rem', flexWrap: 'nowrap' }}>
-                      <span>{cr.emoji}</span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '.35rem', flexWrap: 'nowrap' }}>
+                      <LucideIcon name={cr.icon} size={14} color={cr.color} />
                       <span style={{ flex: 1 }}>{cr.name}</span>
                       <span
                         className="mx-toggle"
