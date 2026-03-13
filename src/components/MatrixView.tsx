@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import type { ClassifierObject, InfraBlock } from '../types'
+import type { ClassifierObject, InfraBlock, InfraSection } from '../types'
 import { ORBITS, CORES, getCoreId, getOrbitId } from '../constants'
 import LucideIcon from './LucideIcon'
+import InfraDetailModal from './InfraDetailModal'
 
 interface Props {
   objects: ClassifierObject[]
@@ -10,12 +11,12 @@ interface Props {
 }
 
 export default function MatrixView({ objects, infraBlocks, onSelect }: Props) {
-  // Which cores have infra expanded
   const [expandedCores, setExpandedCores] = useState<Set<string>>(new Set())
-  // Which section chips are expanded (to show sub-items)
-  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set())
-  // Hover on object => highlight its infraCodes
+  // Popup for infra section detail
+  const [popupSection, setPopupSection] = useState<InfraSection | null>(null)
+  // Hover on object => highlight its infraCodes and satCodes
   const [litCodes, setLitCodes] = useState<string[]>([])
+  const [litSatCodes, setLitSatCodes] = useState<string[]>([])
 
   function toggleCore(coreId: string) {
     setExpandedCores(prev => {
@@ -25,28 +26,34 @@ export default function MatrixView({ objects, infraBlocks, onSelect }: Props) {
     })
   }
 
-  function toggleSection(code: string) {
-    setExpandedSections(prev => {
-      const next = new Set(prev)
-      next.has(code) ? next.delete(code) : next.add(code)
-      return next
-    })
+  function openInfraPopup(secCode: string) {
+    for (const block of infraBlocks) {
+      const sec = block.sections.find(s => s.code === secCode)
+      if (sec) { setPopupSection(sec); return }
+    }
   }
 
-  // For a given core, get all infra blocks that have at least one section used in this core's objects
   function getInfraForCore(coreId: string) {
     const coreObjs = objects.filter(o => getCoreId(o.code) === coreId)
     const usedCodes = new Set(coreObjs.flatMap(o => o.infraCodes))
-
     return infraBlocks
-      .map(block => ({
-        ...block,
-        sections: block.sections.filter(sec => usedCodes.has(sec.code)),
-      }))
+      .map(block => ({ ...block, sections: block.sections.filter(sec => usedCodes.has(sec.code)) }))
       .filter(block => block.sections.length > 0)
   }
 
-  const numCols = ORBITS.length // 6 orbit columns
+  function getSatsForCore(coreId: string) {
+    const coreObjs = objects.filter(o => getCoreId(o.code) === coreId)
+    const seen = new Set<string>()
+    const result: { code: string; name: string }[] = []
+    for (const obj of coreObjs) {
+      for (const sat of obj.sats) {
+        if (!seen.has(sat.code)) { seen.add(sat.code); result.push(sat) }
+      }
+    }
+    return result
+  }
+
+  const numCols = ORBITS.length
 
   return (
     <div className="matrix-wrap">
@@ -68,6 +75,8 @@ export default function MatrixView({ objects, infraBlocks, onSelect }: Props) {
             const coreObjs = objects.filter(o => getCoreId(o.code) === cr.id)
             const isExpanded = expandedCores.has(cr.id)
             const infraForCore = getInfraForCore(cr.id)
+            const satsForCore = getSatsForCore(cr.id)
+            const hasExpandable = infraForCore.length > 0 || satsForCore.length > 0
 
             return (
               <>
@@ -75,115 +84,115 @@ export default function MatrixView({ objects, infraBlocks, onSelect }: Props) {
                 <tr key={cr.id} className="mx-core-row">
                   <td
                     className="core-label"
-                    style={{ color: cr.color, cursor: 'pointer', userSelect: 'none' }}
-                    onClick={() => toggleCore(cr.id)}
-                    title={isExpanded ? 'Свернуть инфраструктуру' : 'Развернуть инфраструктуру'}
+                    style={{ color: cr.color, cursor: hasExpandable ? 'pointer' : 'default', userSelect: 'none' }}
+                    onClick={() => hasExpandable && toggleCore(cr.id)}
+                    title={isExpanded ? 'Свернуть' : 'Развернуть инфра-слои и спутники'}
                   >
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '.35rem', flexWrap: 'nowrap' }}>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '.35rem', flexWrap: 'nowrap' }}>
                       <LucideIcon name={cr.icon} size={14} color={cr.color} />
                       <span style={{ flex: 1 }}>{cr.name}</span>
-                      {infraForCore.length > 0 && (
-                        <span style={{
-                          fontSize: '.42rem',
-                          color: 'var(--text3)',
-                          opacity: 0.55,
-                          textTransform: 'uppercase',
-                          letterSpacing: '.04em',
-                          whiteSpace: 'nowrap',
-                        }}>
+                      {hasExpandable && (
+                        <span style={{ fontSize: '.42rem', color: 'var(--text3)', opacity: 0.55, textTransform: 'uppercase', letterSpacing: '.04em', whiteSpace: 'nowrap' }}>
                           инфра-слои
                         </span>
                       )}
-                      <span
-                        className="mx-toggle"
-                        style={{
-                          transform: isExpanded ? 'rotate(90deg)' : 'none',
-                          color: cr.color,
-                          opacity: infraForCore.length ? 1 : 0.3,
-                        }}
-                      >▶</span>
+                      {hasExpandable && (
+                        <span className="mx-toggle" style={{ transform: isExpanded ? 'rotate(90deg)' : 'none', color: cr.color }}>▶</span>
+                      )}
                     </span>
                   </td>
                   {ORBITS.map(ob => {
                     const items = coreObjs.filter(o => getOrbitId(o.code) === ob.id)
                     return (
                       <td key={ob.id}>
-                        {items.map(obj => {
-                          return (
-                            <div
-                              key={obj.code}
-                              className={`mx-item${obj.key ? ' mx-key' : ''}`}
-                              onClick={() => onSelect(obj)}
-                              onMouseEnter={() => setLitCodes(obj.infraCodes)}
-                              onMouseLeave={() => setLitCodes([])}
-                            >
-                              <span className="mx-code" style={{ color: cr.color }}>
-                                {obj.code.split('.').pop()}
-                              </span>
-                              <span className="mx-name">{obj.name}</span>
-                            </div>
-                          )
-                        })}
+                        {items.map(obj => (
+                          <div
+                            key={obj.code}
+                            className="mx-item"
+                            onClick={() => onSelect(obj)}
+                            onMouseEnter={() => {
+                              setLitCodes(obj.infraCodes)
+                              setLitSatCodes(obj.sats.map(s => s.code))
+                            }}
+                            onMouseLeave={() => { setLitCodes([]); setLitSatCodes([]) }}
+                          >
+                            <span className="mx-code" style={{ color: cr.color }}>
+                              {obj.code.split('.').pop()}
+                            </span>
+                            <span className="mx-name">{obj.name}</span>
+                          </div>
+                        ))}
                         {items.length > 0 && <span className="mx-count">{items.length}</span>}
-                        {items.length === 0 && (
-                          <span style={{ fontSize: '.48rem', color: 'var(--text3)' }}>—</span>
-                        )}
+                        {items.length === 0 && <span style={{ fontSize: '.48rem', color: 'var(--text3)' }}>—</span>}
                       </td>
                     )
                   })}
                 </tr>
 
-                {/* ── Инфраструктурные строки (при раскрытии) ── */}
+                {/* ── Инфраструктурные строки ── */}
                 {isExpanded && infraForCore.map(block => (
                   <tr key={`${cr.id}-${block.code}`} className="mx-infra-row">
-                    {/* Левая ячейка: название блока */}
                     <td className="mx-infra-label">
-                      <span className="mx-infra-block-name" style={{ color: cr.color }}>
-                        {block.code}
-                      </span>
+                      <span className="mx-infra-block-name" style={{ color: cr.color }}>{block.code}</span>
                       <span className="mx-infra-block-full">{block.name}</span>
                     </td>
-                    {/* Одна широкая ячейка, занимающая все орбиты */}
                     <td colSpan={numCols} className="mx-infra-cell">
                       <div className="mx-infra-chips">
                         {block.sections.map(sec => {
-                          const isSecOpen = expandedSections.has(sec.code)
                           const secLit = litCodes.length > 0 && litCodes.includes(sec.code)
                           return (
-                            <div key={sec.code} className={`mx-chip-wrap${secLit ? ' mx-chip-wrap--lit' : ''}`}>
-                              <button
-                                className={`mx-chip${isSecOpen ? ' mx-chip--open' : ''}${secLit ? ' mx-chip--lit' : ''}`}
-                                onClick={() => toggleSection(sec.code)}
-                                style={secLit ? { borderColor: cr.color, color: cr.color } : {}}
-                              >
-                                <span className="mx-chip-code">{sec.code}</span>
-                                <span className="mx-chip-name">{sec.name}</span>
-                                {sec.items.length > 0 && (
-                                  <span className="mx-chip-chevron" style={{ transform: isSecOpen ? 'rotate(180deg)' : 'none' }}>▾</span>
-                                )}
-                              </button>
-                              {isSecOpen && (
-                                <div className="mx-chip-items">
-                                  {sec.items.map(item => (
-                                    <div key={item.code} className="mx-chip-item">
-                                      <span className="mx-chip-item-code">{item.code}</span>
-                                      <span className="mx-chip-item-name">{item.name}</span>
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
-                            </div>
+                            <button
+                              key={sec.code}
+                              className={`mx-chip${secLit ? ' mx-chip--lit' : ''}`}
+                              onClick={() => openInfraPopup(sec.code)}
+                              style={secLit ? { borderColor: cr.color, color: cr.color } : {}}
+                            >
+                              <span className="mx-chip-code">{sec.code}</span>
+                              <span className="mx-chip-name">{sec.name}</span>
+                            </button>
                           )
                         })}
                       </div>
                     </td>
                   </tr>
                 ))}
+
+                {/* ── Строка спутников ── */}
+                {isExpanded && satsForCore.length > 0 && (
+                  <tr key={`${cr.id}-sats`} className="mx-infra-row mx-sats-row">
+                    <td className="mx-infra-label">
+                      <span className="mx-infra-block-name" style={{ color: cr.color }}>СП</span>
+                      <span className="mx-infra-block-full">Спутники</span>
+                    </td>
+                    <td colSpan={numCols} className="mx-infra-cell">
+                      <div className="mx-infra-chips">
+                        {satsForCore.map(sat => {
+                          const satLit = litSatCodes.length > 0 && litSatCodes.includes(sat.code)
+                          return (
+                            <div
+                              key={sat.code}
+                              className={`mx-chip mx-sat-chip${satLit ? ' mx-chip--lit' : ''}`}
+                              style={satLit ? { borderColor: cr.color, color: cr.color } : {}}
+                            >
+                              <span className="mx-chip-code">{sat.code}</span>
+                              <span className="mx-chip-name">{sat.name}</span>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </td>
+                  </tr>
+                )}
               </>
             )
           })}
         </tbody>
       </table>
+
+      {/* ── Popup инфра-секции ── */}
+      {popupSection && (
+        <InfraDetailModal section={popupSection} onClose={() => setPopupSection(null)} />
+      )}
     </div>
   )
 }
