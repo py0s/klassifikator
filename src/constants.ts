@@ -6,22 +6,22 @@
 import type { CoreDef, OrbitDef, CoreId } from './types';
 
 export const ORBITS: OrbitDef[] = [
-  { id: 'O1', name: 'Порог',   range: '0–50 м',    color: '#f59e0b', bg: 'rgba(245,158,11,0.08)' },
-  { id: 'O2', name: 'Двор',    range: '50–400 м',   color: '#84cc16', bg: 'rgba(132,204,22,0.08)' },
-  { id: 'O3', name: 'Квартал', range: '400–800 м',  color: '#06b6d4', bg: 'rgba(6,182,212,0.08)' },
-  { id: 'O4', name: 'Район',   range: '0,8–1,5 км', color: '#8b5cf6', bg: 'rgba(139,92,246,0.08)' },
-  { id: 'O5', name: 'Округ',   range: '1,5–5 км',   color: '#ec4899', bg: 'rgba(236,72,153,0.08)' },
-  { id: 'O6', name: 'Город',   range: '>5 км',      color: '#ef4444', bg: 'rgba(239,68,68,0.08)' },
+  { id: 'O1', name: 'Порог',   range: '0–50 м',    color: '#a16207', bg: 'rgba(161,98,7,0.09)' },
+  { id: 'O2', name: 'Двор',    range: '50–400 м',   color: '#3f6212', bg: 'rgba(63,98,18,0.09)' },
+  { id: 'O3', name: 'Квартал', range: '400–800 м',  color: '#0e7490', bg: 'rgba(14,116,144,0.09)' },
+  { id: 'O4', name: 'Район',   range: '0,8–1,5 км', color: '#5b21b6', bg: 'rgba(91,33,182,0.09)' },
+  { id: 'O5', name: 'Округ',   range: '1,5–5 км',   color: '#9d174d', bg: 'rgba(157,23,77,0.09)' },
+  { id: 'O6', name: 'Город',   range: '>5 км',      color: '#991b1b', bg: 'rgba(153,27,27,0.09)' },
 ];
 
 export const CORES: CoreDef[] = [
-  { id: 'И', name: 'Игра',     icon: 'Gamepad2',      emoji: '🎮', color: '#f472b6', bg: 'rgba(244,114,182,0.1)' },
-  { id: 'Д', name: 'Движение', icon: 'PersonStanding', emoji: '🏃', color: '#60a5fa', bg: 'rgba(96,165,250,0.1)' },
-  { id: 'П', name: 'Природа',  icon: 'Leaf',           emoji: '🌿', color: '#4ade80', bg: 'rgba(74,222,128,0.1)' },
-  { id: 'В', name: 'Вода',     icon: 'Waves',          emoji: '💧', color: '#38bdf8', bg: 'rgba(56,189,248,0.1)' },
-  { id: 'С', name: 'Событие',  icon: 'CalendarDays',   emoji: '🎭', color: '#fbbf24', bg: 'rgba(251,191,36,0.1)' },
-  { id: 'З', name: 'Зима',     icon: 'Snowflake',      emoji: '❄️', color: '#a78bfa', bg: 'rgba(167,139,250,0.1)' },
-  { id: 'М', name: 'Маршрут',  icon: 'Route',          emoji: '🛤️', color: '#fb923c', bg: 'rgba(251,146,60,0.1)' },
+  { id: 'И', name: 'Игра',     icon: 'Gamepad2',      emoji: '🎮', color: '#9d174d', bg: 'rgba(157,23,77,0.09)' },
+  { id: 'Д', name: 'Движение', icon: 'PersonStanding', emoji: '🏃', color: '#1d4ed8', bg: 'rgba(29,78,216,0.09)' },
+  { id: 'П', name: 'Природа',  icon: 'Leaf',           emoji: '🌿', color: '#15803d', bg: 'rgba(21,128,61,0.09)' },
+  { id: 'В', name: 'Вода',     icon: 'Waves',          emoji: '💧', color: '#0369a1', bg: 'rgba(3,105,161,0.09)' },
+  { id: 'С', name: 'Событие',  icon: 'CalendarDays',   emoji: '🎭', color: '#92400e', bg: 'rgba(146,64,14,0.09)' },
+  { id: 'З', name: 'Зима',     icon: 'Snowflake',      emoji: '❄️', color: '#4c1d95', bg: 'rgba(76,29,149,0.09)' },
+  { id: 'М', name: 'Маршрут',  icon: 'Route',          emoji: '🛤️', color: '#c2410c', bg: 'rgba(194,65,12,0.09)' },
 ];
 
 /** Lucide иконки для инфраструктурных блоков (по коду блока) */

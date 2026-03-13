@@ -117,9 +117,6 @@ export default function App() {
         />
       )}
 
-      <div className="footer">
-        Классификатор объектов городской среды Москвы — v9.0 — {CORES.length} ядер × {ORBITS.length} орбит — {objects.length} объектов
-      </div>
     </>
   )
 }

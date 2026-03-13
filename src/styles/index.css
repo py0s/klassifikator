@@ -18,20 +18,20 @@
   --accent2: #d48a55;
   --white: #1a1714;
   /* Орбиты */
-  --o1: #d97706; --o1bg: rgba(217,119,6,0.08);
-  --o2: #65a30d; --o2bg: rgba(101,163,13,0.08);
-  --o3: #0891b2; --o3bg: rgba(8,145,178,0.08);
-  --o4: #7c3aed; --o4bg: rgba(124,58,237,0.08);
-  --o5: #db2777; --o5bg: rgba(219,39,119,0.08);
-  --o6: #dc2626; --o6bg: rgba(220,38,38,0.08);
+  --o1: #a16207; --o1bg: rgba(161,98,7,0.09);
+  --o2: #3f6212; --o2bg: rgba(63,98,18,0.09);
+  --o3: #0e7490; --o3bg: rgba(14,116,144,0.09);
+  --o4: #5b21b6; --o4bg: rgba(91,33,182,0.09);
+  --o5: #9d174d; --o5bg: rgba(157,23,77,0.09);
+  --o6: #991b1b; --o6bg: rgba(153,27,27,0.09);
   /* Ядра */
-  --ci: #db2777; --cibg: rgba(219,39,119,0.07);
-  --cd: #2563eb; --cdbg: rgba(37,99,235,0.07);
-  --cp: #16a34a; --cpbg: rgba(22,163,74,0.07);
-  --cv: #0284c7; --cvbg: rgba(2,132,199,0.07);
-  --cs: #d97706; --csbg: rgba(217,119,6,0.07);
-  --cz: #7c3aed; --czbg: rgba(124,58,237,0.07);
-  --cm: #ea580c; --cmbg: rgba(234,88,12,0.07);
+  --ci: #9d174d; --cibg: rgba(157,23,77,0.09);
+  --cd: #1d4ed8; --cdbg: rgba(29,78,216,0.09);
+  --cp: #15803d; --cpbg: rgba(21,128,61,0.09);
+  --cv: #0369a1; --cvbg: rgba(3,105,161,0.09);
+  --cs: #92400e; --csbg: rgba(146,64,14,0.09);
+  --cz: #4c1d95; --czbg: rgba(76,29,149,0.09);
+  --cm: #c2410c; --cmbg: rgba(194,65,12,0.09);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -186,7 +186,9 @@ body {
 }
 .mx-chip--lit {
   border-color: currentColor !important;
-  background: rgba(201,149,107,0.12) !important;
+  border-width: 2px !important;
+  background: color-mix(in srgb, currentColor 18%, transparent) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 12%, transparent);
 }
 
 /* Sat chip — no expand, cursor default */
