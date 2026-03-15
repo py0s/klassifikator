@@ -55,9 +55,10 @@ export interface CoreDef {
 
 /** Один спутник в реестре */
 export interface SatelliteItem {
-  code: string;   // "ЗА.01"
-  name: string;   // "Общественный туалет"
-  desc: string;   // описание
+  code: string;     // "ЗА.01"
+  name: string;     // "Общественный туалет"
+  desc: string;     // описание
+  orbits?: string;  // "О3–О6" — диапазон применимых орбит
 }
 
 /** Группа спутников (ЗА, ОЖ, СР, КУ, ТД) */
