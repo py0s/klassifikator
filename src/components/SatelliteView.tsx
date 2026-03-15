@@ -1,25 +1,36 @@
 /* ═══════════════════════════════════════════════════════════
    SatelliteView.tsx — Вид «Спутники»
-   Все карточки спутников, фильтрация по группам (ЗА/ОЖ/СР/КУ/ТД)
+   Все карточки спутников, фильтрация по группам (ЗА/ОЖ/СР/КУ)
+   Клик по карточке → попап с деталями
    ═══════════════════════════════════════════════════════════ */
 
-import { useState } from 'react'
-import type { SatelliteGroup } from '../types'
+import { useState, useEffect } from 'react'
+import type { SatelliteGroup, SatelliteItem } from '../types'
 import { useTiltEffect } from '../hooks/useTiltEffect'
 
 interface Props {
   groups: SatelliteGroup[]
 }
 
-function SatCard({ item, color }: { item: { code: string; name: string; desc: string }; color: string }) {
+/* ─── Карточка спутника ─────────────────────────────────── */
+function SatCard({
+  item,
+  color,
+  onClick,
+}: {
+  item: SatelliteItem
+  color: string
+  onClick: () => void
+}) {
   const { ref, handleMouseMove, handleMouseLeave } = useTiltEffect(6)
   return (
     <div
       ref={ref}
       className="sat-card"
-      style={{ '--sat-color': color } as React.CSSProperties}
+      style={{ '--sat-color': color, cursor: 'pointer' } as React.CSSProperties}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      onClick={onClick}
     >
       {/* Placeholder для фото */}
       <div className="card-placeholder">
@@ -39,8 +50,82 @@ function SatCard({ item, color }: { item: { code: string; name: string; desc: st
   )
 }
 
+/* ─── Попап деталей спутника ─────────────────────────────── */
+function SatPopup({
+  item,
+  color,
+  groupName,
+  onClose,
+}: {
+  item: SatelliteItem
+  color: string
+  groupName: string
+  onClose: () => void
+}) {
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [onClose])
+
+  return (
+    <div className="popup-overlay" onClick={onClose}>
+      <div className="popup" onClick={e => e.stopPropagation()} style={{ maxWidth: '480px' }}>
+        <div className="popup-close" onClick={onClose}>✕</div>
+
+        {/* Header */}
+        <div className="popup-head">
+          <div className="popup-code-big" style={{ color }}>{item.code}</div>
+          <div className="popup-title-big">{item.name}</div>
+        </div>
+
+        <div className="popup-body">
+          {/* Stats */}
+          <div className="popup-stats">
+            <div className="ps">
+              <div className="ps-lbl">Группа</div>
+              <div className="ps-val">
+                <span
+                  style={{
+                    display: 'inline-block',
+                    background: color,
+                    color: '#fff',
+                    borderRadius: '4px',
+                    padding: '1px 7px',
+                    fontSize: '.7rem',
+                    fontWeight: 600,
+                  }}
+                >
+                  {item.code.split('.')[0]}
+                </span>
+                {' '}{groupName}
+              </div>
+            </div>
+            {item.orbits && (
+              <div className="ps">
+                <div className="ps-lbl">Орбиты</div>
+                <div className="ps-val">{item.orbits}</div>
+              </div>
+            )}
+          </div>
+
+          {/* Description */}
+          {item.desc && (
+            <>
+              <div className="popup-section">Описание</div>
+              <div className="popup-desc-full">{item.desc}</div>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/* ─── Главный компонент ──────────────────────────────────── */
 export default function SatelliteView({ groups }: Props) {
   const [activeGroup, setActiveGroup] = useState<string>('all')
+  const [selected, setSelected] = useState<{ item: SatelliteItem; color: string; groupName: string } | null>(null)
 
   const filtered = activeGroup === 'all'
     ? groups
@@ -82,16 +167,27 @@ export default function SatelliteView({ groups }: Props) {
             <div className="orbit-line" />
           </div>
           <div className="grid sat-grid">
-            {g.items.map((item, i) => (
+            {g.items.map((item) => (
               <SatCard
                 key={item.code}
                 item={item}
                 color={g.color}
+                onClick={() => setSelected({ item, color: g.color, groupName: g.groupName })}
               />
             ))}
           </div>
         </div>
       ))}
+
+      {/* Попап */}
+      {selected && (
+        <SatPopup
+          item={selected.item}
+          color={selected.color}
+          groupName={selected.groupName}
+          onClose={() => setSelected(null)}
+        />
+      )}
     </div>
   )
 }
