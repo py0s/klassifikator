@@ -8,6 +8,7 @@ import type { ClassifierObject } from '../types'
 import { ORBITS, getOrbitId } from '../constants'
 import { useTiltEffect } from '../hooks/useTiltEffect'
 import ObjectCard from './ObjectCard'
+import CardComment from './CardComment'
 import type { InfraBlock } from '../types'
 
 interface Props {
@@ -56,6 +57,8 @@ function OrbitCard({ orbit, count, onClick }: {
           <span className="orbit-card-cta">Смотреть →</span>
         </div>
       </div>
+
+      <CardComment cardCode={orbit.id} cardName={orbit.name} />
 
       {/* Цветная полоска снизу */}
       <div className="orbit-card-stripe" style={{ background: orbit.color }} />

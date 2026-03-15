@@ -21,6 +21,8 @@ import SatelliteView from './components/SatelliteView'
 import InfraView from './components/InfraView'
 import ObjectPopup from './components/ObjectPopup'
 import InfraDetailModal from './components/InfraDetailModal'
+import SettingsModal from './components/SettingsModal'
+import { UserProvider, useUser } from './contexts/UserContext'
 
 const objects = objectsData as ClassifierObject[]
 const infraBlocks = infraData as InfraBlock[]
@@ -37,6 +39,15 @@ const VIEWS: { id: ViewType; label: string }[] = [
 ]
 
 export default function App() {
+  return (
+    <UserProvider>
+      <AppInner />
+    </UserProvider>
+  )
+}
+
+function AppInner() {
+  const { isSet } = useUser()
   // ─── State ───
   const [filterCore, setFilterCore] = useState<string>('all')
   const [view, setView] = useState<ViewType>('cores')
@@ -44,6 +55,7 @@ export default function App() {
   const [selectedInfraSection, setSelectedInfraSection] = useState<InfraSection | null>(null)
   const [hoveredInfraCode, setHoveredInfraCode] = useState<string | null>(null)
   const [hoveredCardInfraCodes, setHoveredCardInfraCodes] = useState<string[]>([])
+  const [settingsOpen, setSettingsOpen] = useState(!isSet)
 
   // ─── Filtered objects by core ───
   const filtered = useMemo(() => {
@@ -80,6 +92,15 @@ export default function App() {
 
   return (
     <>
+      {/* ── Кнопка настроек (фиксированная, правый верхний угол) ── */}
+      <button
+        className="settings-fab"
+        onClick={() => setSettingsOpen(true)}
+        title="Настройки пользователя"
+      >
+        ⚙
+      </button>
+
       {/* ── Hero ── */}
       <Header />
 
@@ -145,6 +166,11 @@ export default function App() {
           onClose={() => setSelectedInfraSection(null)}
         />
       )}
+
+      <SettingsModal
+        open={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+      />
     </>
   )
 }

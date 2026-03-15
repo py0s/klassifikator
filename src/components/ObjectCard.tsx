@@ -12,6 +12,7 @@ import type { ClassifierObject } from '../types'
 import { findCore } from '../constants'
 import LucideIcon from './LucideIcon'
 import { useTiltEffect } from '../hooks/useTiltEffect'
+import CardComment from './CardComment'
 
 interface Props {
   obj: ClassifierObject
@@ -91,6 +92,7 @@ export default function ObjectCard({ obj, hoveredInfraCode, onClick, onInfraHove
           ))}
         </div>
       )}
+      <CardComment cardCode={obj.code} cardName={obj.name} />
     </div>
   )
 }

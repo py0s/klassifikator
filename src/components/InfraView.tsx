@@ -7,6 +7,7 @@ import type { InfraBlock, InfraSection } from '../types'
 import { INFRA_BLOCK_ICONS } from '../constants'
 import LucideIcon from './LucideIcon'
 import { useTiltEffect } from '../hooks/useTiltEffect'
+import CardComment from './CardComment'
 
 interface Props {
   infraBlocks: InfraBlock[]
@@ -41,6 +42,7 @@ function SectionCard({ section, onInfraClick }: {
       {section.purpose && (
         <div className="infra-card-purpose">{section.purpose}</div>
       )}
+      <CardComment cardCode={section.code} cardName={section.name} />
     </div>
   )
 }

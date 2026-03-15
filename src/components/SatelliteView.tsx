@@ -7,6 +7,7 @@
 import { useState, useEffect } from 'react'
 import type { SatelliteGroup, SatelliteItem } from '../types'
 import { useTiltEffect } from '../hooks/useTiltEffect'
+import CardComment from './CardComment'
 
 interface Props {
   groups: SatelliteGroup[]
@@ -46,6 +47,7 @@ function SatCard({
         <div className="sat-card-name">{item.name}</div>
         {item.desc && <div className="sat-card-desc">{item.desc}</div>}
       </div>
+      <CardComment cardCode={item.code} cardName={item.name} />
     </div>
   )
 }
