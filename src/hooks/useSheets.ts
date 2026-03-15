@@ -1,6 +1,7 @@
 /* ═══════════════════════════════════════════════════════════
    useSheets.ts — Отправка данных в Google Sheets
-   через Apps Script Web App (POST)
+   Используем GET + URL-параметры (единственный надёжный способ
+   без CORS для Apps Script)
    ═══════════════════════════════════════════════════════════ */
 
 const SHEETS_URL = import.meta.env.VITE_SHEETS_URL as string | undefined
@@ -19,20 +20,23 @@ export async function sendToSheets(payload: SheetsPayload): Promise<void> {
     return
   }
 
-  const body = JSON.stringify({
-    ...payload,
+  const params = new URLSearchParams({
     timestamp: new Date().toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' }),
+    cardCode:  payload.cardCode,
+    cardName:  payload.cardName,
+    user:      payload.user,
+    action:    payload.action,
+    comment:   payload.comment ?? '',
   })
 
   try {
-    await fetch(SHEETS_URL, {
-      method: 'POST',
-      // Apps Script требует no-cors для анонимных запросов
+    // GET-запрос с параметрами — работает без CORS preflight
+    await fetch(`${SHEETS_URL}?${params.toString()}`, {
+      method: 'GET',
       mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body,
     })
   } catch (err) {
     console.error('[useSheets] Ошибка отправки:', err)
   }
 }
+
