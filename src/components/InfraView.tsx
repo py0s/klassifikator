@@ -13,9 +13,8 @@ interface Props {
   onInfraClick: (code: string) => void
 }
 
-function SectionCard({ section, blockCode, onInfraClick }: {
+function SectionCard({ section, onInfraClick }: {
   section: InfraSection
-  blockCode: string
   onInfraClick: (code: string) => void
 }) {
   const { ref, handleMouseMove, handleMouseLeave } = useTiltEffect(5)
@@ -37,7 +36,6 @@ function SectionCard({ section, blockCode, onInfraClick }: {
       </div>
       <div className="infra-card-top">
         <span className="infra-card-code">{section.code}</span>
-        <span className="infra-card-sub">{section.items.length} подвидов</span>
       </div>
       <div className="infra-card-name">{section.name}</div>
       {section.purpose && (
@@ -68,7 +66,6 @@ export default function InfraView({ infraBlocks, onInfraClick }: Props) {
                 <SectionCard
                   key={section.code}
                   section={section}
-                  blockCode={block.code}
                   onInfraClick={onInfraClick}
                 />
               ))}

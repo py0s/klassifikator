@@ -2,8 +2,8 @@
    InfraDetailModal.tsx — Детальное окно инфраструктурной секции
    
    Открывается при клике на инфра-чип (например СВ.01).
-   Показывает все подвиды: СВ.01.01, СВ.01.02, и т.д.
-   с названием и техническими характеристиками.
+   Показывает код, название и назначение раздела.
+   Подпунктов нет — раздел является конечным элементом.
    ═══════════════════════════════════════════════════════════ */
 
 import { useEffect } from 'react'
@@ -28,18 +28,11 @@ export default function InfraDetailModal({ section, onClose }: Props) {
           <div>
             <div className="infra-detail-code">{section.code}</div>
             <div className="infra-detail-name">{section.name}</div>
-            <div className="infra-detail-purpose">{section.purpose}</div>
+            {section.purpose && (
+              <div className="infra-detail-purpose">{section.purpose}</div>
+            )}
           </div>
           <div className="popup-close" onClick={onClose} style={{ position: 'static', flexShrink: 0 }}>✕</div>
-        </div>
-        <div className="infra-detail-body">
-          {section.items.map(item => (
-            <div key={item.code} className="infra-item-row">
-              <div className="infra-item-code">{item.code}</div>
-              <div className="infra-item-name">{item.name}</div>
-              <div className="infra-item-specs">{item.specs}</div>
-            </div>
-          ))}
         </div>
       </div>
     </div>

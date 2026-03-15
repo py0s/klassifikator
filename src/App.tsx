@@ -29,11 +29,11 @@ const satellites = satellitesData as SatelliteGroup[]
 type ViewType = 'cores' | 'orbits' | 'satellites' | 'infra' | 'matrix'
 
 const VIEWS: { id: ViewType; label: string }[] = [
-  { id: 'cores',      label: 'Ядра' },
+  { id: 'matrix',     label: 'Матрица' },
   { id: 'orbits',     label: 'Орбиты' },
+  { id: 'cores',      label: 'Ядра' },
   { id: 'satellites', label: 'Спутники' },
   { id: 'infra',      label: 'Инфраструктурные слои' },
-  { id: 'matrix',     label: 'Матрица' },
 ]
 
 export default function App() {
