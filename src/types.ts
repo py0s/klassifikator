@@ -19,7 +19,6 @@ export interface Satellite {
 /** Объект классификатора — одна карточка в дашборде */
 export interface ClassifierObject {
   code: string;        // "О2.И.01"
-  icon: string;        // эмодзи
   name: string;        // "Площадка для младенцев (0–1,5)"
   key: boolean;        // true = ключевое ядро
   norm: string;        // "1 на 500 жит."
@@ -57,10 +56,24 @@ export interface InfraBlock {
 export interface CoreDef {
   id: CoreId;
   name: string;
-  icon: string;   // Lucide icon name (для кнопок и карточек)
-  emoji: string;  // emoji (для матрицы и текстовых мест)
+  icon: string;   // Lucide icon name
   color: string;
   bg: string;
+}
+
+/** Один спутник в реестре */
+export interface SatelliteItem {
+  code: string;   // "ЗА.01"
+  name: string;   // "Общественный туалет"
+  desc: string;   // описание
+}
+
+/** Группа спутников (ЗА, ОЖ, СР, КУ, ТД) */
+export interface SatelliteGroup {
+  group: string;      // "ЗА"
+  groupName: string;  // "Забота"
+  color: string;      // цвет группы
+  items: SatelliteItem[];
 }
 
 /** Определение орбиты */

@@ -1,99 +1,127 @@
 /* ═══════════════════════════════════════════════════════════
-   App.tsx — Корневой компонент
-   Управление фильтрами, видами, попапами
+   App.tsx — Корневой компонент (5 видов)
+   Ядра | Орбиты | Спутники | Инфраструктурные слои | Матрица
    ═══════════════════════════════════════════════════════════ */
 
 import { useState, useMemo, useCallback } from 'react'
-import type { ClassifierObject, InfraBlock, InfraSection } from './types'
-import { ORBITS, CORES, getCoreId, getOrbitId } from './constants'
+import type { ClassifierObject, InfraBlock, InfraSection, SatelliteGroup } from './types'
+import { getCoreId, getOrbitId } from './constants'
 
 import objectsData from '../data/objects.json'
 import infraData from '../data/infrastructure.json'
+import satellitesData from '../data/satellites.json'
 
 import Header from './components/Header'
 import StatsBar from './components/StatsBar'
-import Filters from './components/Filters'
+import CoreFilter from './components/CoreFilter'
 import CardGrid from './components/CardGrid'
+import OrbitView from './components/OrbitView'
 import MatrixView from './components/MatrixView'
+import SatelliteView from './components/SatelliteView'
+import InfraView from './components/InfraView'
 import ObjectPopup from './components/ObjectPopup'
 import InfraDetailModal from './components/InfraDetailModal'
 
 const objects = objectsData as ClassifierObject[]
 const infraBlocks = infraData as InfraBlock[]
+const satellites = satellitesData as SatelliteGroup[]
+
+type ViewType = 'cores' | 'orbits' | 'satellites' | 'infra' | 'matrix'
+
+const VIEWS: { id: ViewType; label: string }[] = [
+  { id: 'cores',      label: 'Ядра' },
+  { id: 'orbits',     label: 'Орбиты' },
+  { id: 'satellites', label: 'Спутники' },
+  { id: 'infra',      label: 'Инфраструктурные слои' },
+  { id: 'matrix',     label: 'Матрица' },
+]
 
 export default function App() {
-  // ─── Filters ───
-  const [filterOrbit, setFilterOrbit] = useState<string>('all')
+  // ─── State ───
   const [filterCore, setFilterCore] = useState<string>('all')
-  const [view, setView] = useState<'cards' | 'matrix'>('cards')
-
-  // ─── Popups ───
+  const [view, setView] = useState<ViewType>('cores')
   const [selectedObject, setSelectedObject] = useState<ClassifierObject | null>(null)
   const [selectedInfraSection, setSelectedInfraSection] = useState<InfraSection | null>(null)
-
-  // ─── Hover state: когда наводят на infra-chip → подсветка карточек ───
   const [hoveredInfraCode, setHoveredInfraCode] = useState<string | null>(null)
-
-  // ─── Hover state: когда наводят на карточку → подсветка слоёв в панели ───
   const [hoveredCardInfraCodes, setHoveredCardInfraCodes] = useState<string[]>([])
 
-  // ─── Filtered objects ───
+  // ─── Filtered objects by core ───
   const filtered = useMemo(() => {
     return objects.filter(obj => {
-      if (filterOrbit !== 'all' && getOrbitId(obj.code) !== filterOrbit) return false
       if (filterCore !== 'all' && getCoreId(obj.code) !== filterCore) return false
       return true
     })
-  }, [filterOrbit, filterCore])
+  }, [filterCore])
 
-  // ─── Find infra section by code (e.g. "СВ.01") ───
-  const findInfraSection = useCallback((sectionCode: string): InfraSection | null => {
+  // ─── Infra lookup ───
+  const findInfraSection = useCallback((code: string): InfraSection | null => {
     for (const block of infraBlocks) {
-      const section = block.sections.find(s => s.code === sectionCode)
-      if (section) return section
+      const s = block.sections.find(s => s.code === code)
+      if (s) return s
     }
     return null
   }, [])
 
-  // ─── Open infra section detail ───
-  const openInfraDetail = useCallback((sectionCode: string) => {
-    const section = findInfraSection(sectionCode)
-    if (section) setSelectedInfraSection(section)
+  const openInfraDetail = useCallback((code: string) => {
+    const s = findInfraSection(code)
+    if (s) setSelectedInfraSection(s)
   }, [findInfraSection])
+
+  const sharedCardProps = {
+    infraBlocks,
+    hoveredInfraCode,
+    hoveredCardInfraCodes,
+    onSelect: setSelectedObject,
+    onInfraHover: setHoveredInfraCode,
+    onInfraClick: openInfraDetail,
+    onCardHover: setHoveredCardInfraCodes,
+    onCardLeave: () => setHoveredCardInfraCodes([]),
+  }
 
   return (
     <>
+      {/* ── Hero ── */}
       <Header />
-      <StatsBar objects={filtered} />
-      <Filters
-        filterOrbit={filterOrbit}
-        filterCore={filterCore}
-        onOrbit={setFilterOrbit}
-        onCore={setFilterCore}
-      />
 
+      {/* ── Stats (glassmorphism) ── */}
+      <StatsBar objects={objects} />
+
+      {/* ── View toggle ── */}
       <div className="view-toggle">
-        <button className={`vtbtn ${view === 'cards' ? 'act' : ''}`} onClick={() => setView('cards')}>
-          Карточки
-        </button>
-        <button className={`vtbtn ${view === 'matrix' ? 'act' : ''}`} onClick={() => setView('matrix')}>
-          Матрица
-        </button>
+        {VIEWS.map(v => (
+          <button
+            key={v.id}
+            className={`vtbtn ${view === v.id ? 'act' : ''}`}
+            onClick={() => setView(v.id)}
+          >
+            {v.label}
+          </button>
+        ))}
       </div>
 
-      {view === 'cards' ? (
-        <CardGrid
-          objects={filtered}
-          infraBlocks={infraBlocks}
-          hoveredInfraCode={hoveredInfraCode}
-          hoveredCardInfraCodes={hoveredCardInfraCodes}
-          onSelect={setSelectedObject}
-          onInfraHover={setHoveredInfraCode}
-          onInfraClick={openInfraDetail}
-          onCardHover={setHoveredCardInfraCodes}
-          onCardLeave={() => setHoveredCardInfraCodes([])}
-        />
-      ) : (
+      {/* ── Core filter (only for cores/matrix view) ── */}
+      {(view === 'cores' || view === 'matrix') && (
+        <CoreFilter filterCore={filterCore} onCore={setFilterCore} />
+      )}
+
+      {/* ── Views ── */}
+      {view === 'cores' && (
+        <CardGrid objects={filtered} {...sharedCardProps} />
+      )}
+
+      {view === 'orbits' && (
+        <OrbitView objects={objects} {...sharedCardProps} />
+      )}
+
+      {view === 'satellites' && (
+        <SatelliteView groups={satellites} />
+      )}
+
+      {view === 'infra' && (
+        <InfraView infraBlocks={infraBlocks} onInfraClick={openInfraDetail} />
+      )}
+
+      {view === 'matrix' && (
         <MatrixView
           objects={filtered}
           infraBlocks={infraBlocks}
@@ -101,6 +129,7 @@ export default function App() {
         />
       )}
 
+      {/* ── Popups ── */}
       {selectedObject && (
         <ObjectPopup
           obj={selectedObject}
@@ -116,7 +145,6 @@ export default function App() {
           onClose={() => setSelectedInfraSection(null)}
         />
       )}
-
     </>
   )
 }

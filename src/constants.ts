@@ -15,13 +15,13 @@ export const ORBITS: OrbitDef[] = [
 ];
 
 export const CORES: CoreDef[] = [
-  { id: 'И', name: 'Игра',     icon: 'Gamepad2',      emoji: '🎮', color: '#9d174d', bg: 'rgba(157,23,77,0.09)' },
-  { id: 'Д', name: 'Движение', icon: 'PersonStanding', emoji: '🏃', color: '#1d4ed8', bg: 'rgba(29,78,216,0.09)' },
-  { id: 'П', name: 'Природа',  icon: 'Leaf',           emoji: '🌿', color: '#15803d', bg: 'rgba(21,128,61,0.09)' },
-  { id: 'В', name: 'Вода',     icon: 'Waves',          emoji: '💧', color: '#0369a1', bg: 'rgba(3,105,161,0.09)' },
-  { id: 'С', name: 'Событие',  icon: 'CalendarDays',   emoji: '🎭', color: '#92400e', bg: 'rgba(146,64,14,0.09)' },
-  { id: 'З', name: 'Зима',     icon: 'Snowflake',      emoji: '❄️', color: '#4c1d95', bg: 'rgba(76,29,149,0.09)' },
-  { id: 'М', name: 'Маршрут',  icon: 'Route',          emoji: '🛤️', color: '#c2410c', bg: 'rgba(194,65,12,0.09)' },
+  { id: 'И', name: 'Игра',     icon: 'Gamepad2',      color: '#9d174d', bg: 'rgba(157,23,77,0.09)' },
+  { id: 'Д', name: 'Движение', icon: 'PersonStanding', color: '#1d4ed8', bg: 'rgba(29,78,216,0.09)' },
+  { id: 'П', name: 'Природа',  icon: 'Leaf',           color: '#15803d', bg: 'rgba(21,128,61,0.09)' },
+  { id: 'В', name: 'Вода',     icon: 'Waves',          color: '#0369a1', bg: 'rgba(3,105,161,0.09)' },
+  { id: 'С', name: 'Событие',  icon: 'CalendarDays',   color: '#92400e', bg: 'rgba(146,64,14,0.09)' },
+  { id: 'З', name: 'Зима',     icon: 'Snowflake',      color: '#4c1d95', bg: 'rgba(76,29,149,0.09)' },
+  { id: 'М', name: 'Маршрут',  icon: 'Route',          color: '#c2410c', bg: 'rgba(194,65,12,0.09)' },
 ];
 
 /** Lucide иконки для инфраструктурных блоков (по коду блока) */

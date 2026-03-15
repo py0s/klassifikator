@@ -46,7 +46,9 @@ export default function ObjectPopup({ obj, infraBlocks, onClose, onInfraClick }:
 
         {/* Header */}
         <div className="popup-head">
-          <div className="popup-icon">{obj.icon}</div>
+          <div className="popup-icon">
+            {core && <LucideIcon name={core.icon} size={28} color={core.color} strokeWidth={1.6} />}
+          </div>
           <div className="popup-code-big" style={{ color: core?.color }}>
             {obj.code}
           </div>
