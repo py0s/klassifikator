@@ -73,6 +73,16 @@ function SatPopup({
       <div className="popup" onClick={e => e.stopPropagation()} style={{ maxWidth: '480px' }}>
         <div className="popup-close" onClick={onClose}>✕</div>
 
+        {/* Photo placeholder */}
+        <div className="popup-photo-placeholder">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" opacity="0.4">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+          <span style={{ fontSize: '.65rem', opacity: 0.4, marginTop: '6px' }}>Фото появится здесь</span>
+        </div>
+
         {/* Header */}
         <div className="popup-head">
           <div className="popup-code-big" style={{ color }}>{item.code}</div>
